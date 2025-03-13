@@ -82,59 +82,57 @@ class NumberTheory {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Chon che do:");
+        System.out.println("1: Tinh ham so Euler (phi)");
+        System.out.println("2: Luy thua modulo");
+        System.out.println("3: Nghich dao modulo");
+        System.out.println("4: Kiem tra can nguyen thuy");
+        System.out.println("5: Giai logarit roi rac");
+        System.out.print("Nhap lua chon: ");
 
-        while (true) {
-            System.out.println("Chọn chế độ:");
-            System.out.println("1: Tính hàm số Euler (φ)");
-            System.out.println("2: Lũy thừa modulo");
-            System.out.println("3: Nghịch đảo modulo");
-            System.out.println("4: Kiểm tra căn nguyên thủy");
-            System.out.println("5: Giải logarit rời rạc");
-            System.out.print("Nhập lựa chọn: ");
+        int mode = scanner.nextInt();
 
-            int mode = scanner.nextInt();
-
-            switch (mode) {
-                case 1:
-                    System.out.print("Nhập n: ");
-                    int n = scanner.nextInt();
-                    System.out.println("Hàm Euler φ(" + n + ") = " + eulerTotient(n));
-                    break;
-                case 2:
-                    System.out.print("Nhập a, m, n (tính a^m mod n): ");
-                    BigInteger a = scanner.nextBigInteger();
-                    BigInteger m = scanner.nextBigInteger();
-                    BigInteger mod = scanner.nextBigInteger();
-                    System.out.println("Kết quả: " + modExp(a, m, mod));
-                    break;
-                case 3:
-                    System.out.print("Nhập a, m (tìm a^(-1) mod m): ");
-                    BigInteger invA = scanner.nextBigInteger();
-                    BigInteger invM = scanner.nextBigInteger();
-                    System.out.println("Nghịch đảo của " + invA + " mod " + invM + " là: " + modInverse(invA, invM));
-                    break;
-                case 4:
-                    System.out.print("Nhập số a và n: ");
-                    int pa = scanner.nextInt();
-                    int pn = scanner.nextInt();
-                    if (isPrimitiveRoot(pa, pn)) {
-                        System.out.println(pa + " là căn nguyên thủy của " + pn);
-                    } else {
-                        System.out.println(pa + " không phải là căn nguyên thủy của " + pn);
-                    }
-                    break;
-                case 5:
-                    System.out.print("Nhập a, b, m (tìm x sao cho a^x ≡ b (mod m)): ");
-                    int da = scanner.nextInt();
-                    int db = scanner.nextInt();
-                    int dm = scanner.nextInt();
-                    int result = discreteLog(da, db, dm);
-                    if (result == -1) System.out.println("Không tìm thấy x");
-                    else System.out.println("x = " + result);
-                    break;
-                default:
-                    System.out.println("Chế độ không hợp lệ!");
-            }
+        switch (mode) {
+            case 1:
+                System.out.print("Nhap n: ");
+                int n = scanner.nextInt();
+                System.out.println("Ham Euler phi(" + n + ") = " + eulerTotient(n));
+                break;
+            case 2:
+                System.out.print("Nhap a, m, n (tinh a^m mod n): ");
+                BigInteger a = scanner.nextBigInteger();
+                BigInteger m = scanner.nextBigInteger();
+                BigInteger mod = scanner.nextBigInteger();
+                System.out.println("Ket qua: " + modExp(a, m, mod));
+                break;
+            case 3:
+                System.out.print("Nhap a, m (tim a^(-1) mod m): ");
+                BigInteger invA = scanner.nextBigInteger();
+                BigInteger invM = scanner.nextBigInteger();
+                System.out.println("Nghich dao cua " + invA + " mod " + invM + " la: " + modInverse(invA, invM));
+                break;
+            case 4:
+                System.out.print("Nhap so a va n: ");
+                int pa = scanner.nextInt();
+                int pn = scanner.nextInt();
+                if (isPrimitiveRoot(pa, pn)) {
+                    System.out.println(pa + " la can nguyen thuy cua " + pn);
+                } else {
+                    System.out.println(pa + " khong phai la can nguyen thuy cua " + pn);
+                }
+                break;
+            case 5:
+                System.out.print("Nhap a, b, m (tim x sao cho a^x ≡ b (mod m)): ");
+                int da = scanner.nextInt();
+                int db = scanner.nextInt();
+                int dm = scanner.nextInt();
+                int result = discreteLog(da, db, dm);
+                if (result == -1) System.out.println("Khong tim thay x");
+                else System.out.println("x = " + result);
+                break;
+            default:
+                System.out.println("Che do khong hop le!");
         }
+        scanner.close();
     }
 }

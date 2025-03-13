@@ -2,7 +2,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-
 public class Main {
     public static String caesar(String text, int shift) {
         StringBuilder cipherText = new StringBuilder();
@@ -55,98 +54,23 @@ public class Main {
         return plainText.toString();
     }
 
-    public static String monoalphabeticEncrypt(String text, String key) {
-        if (key.length() != 26) {
-            throw new IllegalArgumentException("Bảng thay thế phải có đúng 26 ký tự.");
-        }
-        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        Map<Character, Character> substitutionMap = new HashMap<>();
-        for (int i = 0; i < alphabet.length(); i++) {
-            substitutionMap.put(alphabet.charAt(i), key.charAt(i));
-        }
-        StringBuilder cipherText = new StringBuilder();
-        for (char c : text.toCharArray()) {
-            cipherText.append(substitutionMap.getOrDefault(c, c));
-        }
-        return cipherText.toString();
-    }
-
-    public static String monoalphabeticDecrypt(String text, String key) {
-        if (key.length() != 26) {
-            throw new IllegalArgumentException("Bảng thay thế phải có đúng 26 ký tự.");
-        }
-        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        Map<Character, Character> reverseMap = new HashMap<>();
-        for (int i = 0; i < alphabet.length(); i++) {
-            reverseMap.put(key.charAt(i), alphabet.charAt(i));
-        }
-        StringBuilder plainText = new StringBuilder();
-        for (char c : text.toCharArray()) {
-            plainText.append(reverseMap.getOrDefault(c, c));
-        }
-        return plainText.toString();
-    }
-
-    public static String railFenceCipher(String message, int key) {
-        if (key <= 1) return message;
-        StringBuilder[] rails = new StringBuilder[key];
-        for (int i = 0; i < key; i++) rails[i] = new StringBuilder();
-        int currentRail = 0, direction = 1;
-        for (char c : message.toCharArray()) {
-            rails[currentRail].append(c);
-            if (currentRail == 0) direction = 1;
-            else if (currentRail == key - 1) direction = -1;
-            currentRail += direction;
-        }
-        StringBuilder ciphertext = new StringBuilder();
-        for (StringBuilder rail : rails) {
-            ciphertext.append(rail);
-        }
-        return ciphertext.toString();
-    }
-    public static String railFenceDecrypt(String cipherText, int key) {
-        if (key <= 1) return cipherText;
-        char[] plainText = new char[cipherText.length()];
-        int[] positions = new int[cipherText.length()];
-        int currentRail = 0, direction = 1;
-
-        for (int i = 0; i < cipherText.length(); i++) {
-            positions[i] = currentRail;
-            if (currentRail == 0) direction = 1;
-            else if (currentRail == key - 1) direction = -1;
-            currentRail += direction;
-        }
-
-        int index = 0;
-        for (int rail = 0; rail < key; rail++) {
-            for (int i = 0; i < cipherText.length(); i++) {
-                if (positions[i] == rail) {
-                    plainText[i] = cipherText.charAt(index++);
-                }
-            }
-        }
-        return new String(plainText);
-    }
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("Chọn chế độ:");
-            System.out.println("1. Mã hóa");
-            System.out.println("2. Giải mã");
-            System.out.print("Nhập lựa chọn: ");
+            System.out.println("Chon che do:");
+            System.out.println("1. Ma hoa");
+            System.out.println("2. Giai ma");
+            System.out.print("Nhap lua chon: ");
             int mode = scanner.nextInt();
 
-            System.out.println("Chọn phương pháp:");
+            System.out.println("Chon phuong phap:");
             System.out.println("1. Caesar");
-            System.out.println("2. Vigenere cơ bản");
+            System.out.println("2. Vigenere co ban");
             System.out.println("3. Vigenere Auto-key");
-            System.out.println("4. Thay thế đơn");
-            System.out.println("5. Rail Fence");
-            System.out.print("Nhập lựa chọn: ");
+            System.out.print("Nhap lua chon: ");
             int method = scanner.nextInt();
-            System.out.print("Nhập văn bản: ");
+            System.out.print("Nhap van ban: ");
             String text = scanner.next().toUpperCase();
             String result = "";
 
@@ -155,40 +79,28 @@ public class Main {
             try {
                 switch (method) {
                     case 1:
-                        System.out.print("Nhập khóa k (số nguyên): ");
+                        System.out.print("Nhap khoa k (so nguyen): ");
                         int k = scanner.nextInt();
                         result = isEncrypt ? caesar(text, k) : caesarDecrypt(text, k);
                         break;
                     case 2:
-                        System.out.print("Nhập khóa (chuỗi): ");
+                        System.out.print("Nhap khoa (chuoi): ");
                         String key1 = scanner.next().toUpperCase();
                         result = isEncrypt ? vigenereEncrypt(text, key1, false) : vigenereDecrypt(text, key1, false);
                         break;
                     case 3:
-                        System.out.print("Nhập khóa (chuỗi): ");
+                        System.out.print("Nhap khoa (chuoi): ");
                         String key2 = scanner.next().toUpperCase();
                         result = isEncrypt ? vigenereEncrypt(text, key2, true) : vigenereDecrypt(text, key2, true);
                         break;
-                    case 4:
-                        System.out.print("Nhập bảng thay thế (26 ký tự): ");
-                        String substitutionKey = scanner.next().toUpperCase();
-                        result = isEncrypt ? monoalphabeticEncrypt(text, substitutionKey) : monoalphabeticDecrypt(text, substitutionKey);
-                        break;
-                    case 5:
-                        System.out.print("Nhập số hàng (số nguyên): ");
-                        int railKey = scanner.nextInt();
-                        result = isEncrypt ? railFenceCipher(text, railKey) : railFenceDecrypt(text, railKey);
-                        break;
                     default:
-                        System.out.println("Chế độ không hợp lệ!");
+                        System.out.println("Che do khong hop le!");
                         return;
                 }
-                System.out.println("Kết quả: " + result);
+                System.out.println("Ket qua: " + result);
             } catch (Exception e) {
-                System.out.println("Lỗi: " + e.getMessage());
+                System.out.println("Loi: " + e.getMessage());
             }
         }
-
     }
-
 }
