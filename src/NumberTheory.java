@@ -31,6 +31,9 @@ class NumberTheory {
         return result;
     }
 
+
+
+
     public static long modInv(long a, long m) {
         long m0 = m, t, q;
         long x0 = 0, x1 = 1;
@@ -86,6 +89,9 @@ class NumberTheory {
         }
         return true;
     }
+    static BigInteger modInverse(BigInteger a, BigInteger m) {
+        return a.modInverse(m);
+    }
 
     public static int discreteLog(int a, int b, int m) {
         a %= m;
@@ -113,6 +119,7 @@ class NumberTheory {
     }
 
     public static void main(String[] args) {
+
         Scanner scanner = new Scanner(System.in);
         System.out.println("Chọn chế độ:");
         System.out.println("1: Thuật toán phần dư Trung Hoa (CRT)");
@@ -138,27 +145,41 @@ class NumberTheory {
                 System.out.println("Nghiệm của hệ đồng dư là: " + chineseRemainderTheorem(congruences));
                 break;
             case 2:
-                int a = scanner.nextInt();
-                int n = scanner.nextInt();
-                System.out.println(isPrimitiveRoot(a, n) ? a + " là căn nguyên thủy của " + n : a + " không phải căn nguyên thủy của " + n);
+                System.out.print("Nhập số a và n: ");
+                int pa = scanner.nextInt();
+                int pn = scanner.nextInt();
+                if (isPrimitiveRoot(pa, pn)) {
+                    System.out.println(pa + " là căn nguyên thủy của " + pn);
+                } else {
+                    System.out.println(pa + " không phải là căn nguyên thủy của " + pn);
+                }
                 break;
             case 3:
-                int x = scanner.nextInt();
-                System.out.println("Hàm Euler φ(" + x + ") = " + eulerTotient(x));
+                System.out.print("Nhập n: ");
+                int n = scanner.nextInt();
+                System.out.println("Hàm Euler φ(" + n + ") = " + eulerTotient(n));
                 break;
             case 4:
-                long base = scanner.nextLong(), exp = scanner.nextLong(), mod = scanner.nextLong();
-                System.out.println("Kết quả: " + modExp(base, exp, mod));
+                System.out.print("Nhập a, m, n (tính a^m mod n): ");
+                long a = scanner.nextLong();
+                long m = scanner.nextLong();
+                long mod = scanner.nextLong();
+                System.out.println("Kết quả: " + modExp(a, m, mod));
                 break;
             case 5:
-                long num = scanner.nextLong(), modNum = scanner.nextLong();
-                long inv = modInv(num, modNum);
-                System.out.println(inv == 0 ? "Không tồn tại nghịch đảo" : "Nghịch đảo: " + inv);
+                System.out.print("Nhập a, m (tìm a^(-1) mod m): ");
+                BigInteger invA = scanner.nextBigInteger();
+                BigInteger invM = scanner.nextBigInteger();
+                System.out.println("Nghịch đảo của " + invA + " mod " + invM + " là: " + modInverse(invA, invM));
                 break;
             case 6:
-                int aLog = scanner.nextInt(), bLog = scanner.nextInt(), mLog = scanner.nextInt();
-                int result = discreteLog(aLog, bLog, mLog);
-                System.out.println(result == -1 ? "Không tìm thấy x" : "x = " + result);
+                System.out.print("Nhập a, b, m (tìm x sao cho a^x ≡ b (mod m)): ");
+                int da = scanner.nextInt();
+                int db = scanner.nextInt();
+                int dm = scanner.nextInt();
+                int result = discreteLog(da, db, dm);
+                if (result == -1) System.out.println("Không tìm thấy x");
+                else System.out.println("x = " + result);
                 break;
             case 7:
                 System.out.println("Nhập a, x, b, y, n: ");
