@@ -54,6 +54,48 @@ public class Main {
         return plainText.toString();
     }
 
+    public static String railFenceCipher(String message, int key) {
+        if (key <= 1) return message;
+        StringBuilder[] rails = new StringBuilder[key];
+        for (int i = 0; i < key; i++) rails[i] = new StringBuilder();
+        int currentRail = 0, direction = 1;
+        for (char c : message.toCharArray()) {
+            rails[currentRail].append(c);
+            if (currentRail == 0) direction = 1;
+            else if (currentRail == key - 1) direction = -1;
+            currentRail += direction;
+        }
+        StringBuilder ciphertext = new StringBuilder();
+        for (StringBuilder rail : rails) {
+            ciphertext.append(rail);
+        }
+        return ciphertext.toString();
+    }
+
+    public static String railFenceDecrypt(String cipherText, int key) {
+        if (key <= 1) return cipherText;
+        char[] plainText = new char[cipherText.length()];
+        int[] positions = new int[cipherText.length()];
+        int currentRail = 0, direction = 1;
+
+        for (int i = 0; i < cipherText.length(); i++) {
+            positions[i] = currentRail;
+            if (currentRail == 0) direction = 1;
+            else if (currentRail == key - 1) direction = -1;
+            currentRail += direction;
+        }
+
+        int index = 0;
+        for (int rail = 0; rail < key; rail++) {
+            for (int i = 0; i < cipherText.length(); i++) {
+                if (positions[i] == rail) {
+                    plainText[i] = cipherText.charAt(index++);
+                }
+            }
+        }
+        return new String(plainText);
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -68,6 +110,8 @@ public class Main {
             System.out.println("1. Caesar");
             System.out.println("2. Vigenere co ban");
             System.out.println("3. Vigenere Auto-key");
+            System.out.println("4. Thay the don");
+            System.out.println("5. Rail Fence");
             System.out.print("Nhap lua chon: ");
             int method = scanner.nextInt();
             System.out.print("Nhap van ban: ");
@@ -92,6 +136,11 @@ public class Main {
                         System.out.print("Nhap khoa (chuoi): ");
                         String key2 = scanner.next().toUpperCase();
                         result = isEncrypt ? vigenereEncrypt(text, key2, true) : vigenereDecrypt(text, key2, true);
+                        break;
+                    case 5:
+                        System.out.print("Nhap so hang (so nguyen): ");
+                        int railKey = scanner.nextInt();
+                        result = isEncrypt ? railFenceCipher(text, railKey) : railFenceDecrypt(text, railKey);
                         break;
                     default:
                         System.out.println("Che do khong hop le!");
