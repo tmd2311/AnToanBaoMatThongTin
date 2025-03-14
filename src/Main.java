@@ -1,9 +1,75 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class Main {
+    private static char[][] playfairMatrix = new char[5][5];
+    private static Map<Character, int[]> playfairMap = new HashMap<>();
+
+    // Tạo ma trận Playfair từ khóa
+    private static void generatePlayfairMatrix(String key) {
+        key = key.toUpperCase().replaceAll("[^A-Z]", "").replace("J", "I");
+        Set<Character> usedChars = new LinkedHashSet<>();
+        for (char c : key.toCharArray()) usedChars.add(c);
+        for (char c = 'B'; c <= 'Z'; c++) if (c != 'J') usedChars.add(c);
+
+        int i = 0;
+        for (char c : usedChars) {
+            playfairMatrix[i / 5][i % 5] = c;
+            playfairMap.put(c, new int[]{i / 5, i % 5});
+            i++;
+        }
+    }
+
+    // Xử lý văn bản thành từng cặp ký tự (chuẩn hóa)
+    private static List<String> preparePlayfairText(String text) {
+        text = text.toUpperCase().replaceAll("[^A-Z]", "").replace("J", "I");
+        List<String> pairs = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+
+        for (char c : text.toCharArray()) {
+            if (sb.length() == 1 && sb.charAt(0) == c) sb.append('X');
+            sb.append(c);
+            if (sb.length() == 2) {
+                pairs.add(sb.toString());
+                sb.setLength(0);
+            }
+        }
+        if (sb.length() == 1) sb.append('X');
+        if (sb.length() == 2) pairs.add(sb.toString());
+
+        return pairs;
+    }
+
+    // Mã hóa & Giải mã Playfair
+    private static String playfairCipher(String text, String key, boolean encrypt) {
+        generatePlayfairMatrix(key);
+        List<String> pairs = preparePlayfairText(text);
+        StringBuilder result = new StringBuilder();
+
+        for (String pair : pairs) {
+            char a = pair.charAt(0), b = pair.charAt(1);
+            int[] posA = playfairMap.get(a), posB = playfairMap.get(b);
+            int rowA = posA[0], colA = posA[1];
+            int rowB = posB[0], colB = posB[1];
+
+            if (rowA == rowB) { // Cùng hàng
+                colA = (colA + (encrypt ? 1 : 4)) % 5;
+                colB = (colB + (encrypt ? 1 : 4)) % 5;
+            } else if (colA == colB) { // Cùng cột
+                rowA = (rowA + (encrypt ? 1 : 4)) % 5;
+                rowB = (rowB + (encrypt ? 1 : 4)) % 5;
+            } else { // Hình chữ nhật
+                int temp = colA;
+                colA = colB;
+                colB = temp;
+            }
+
+            result.append(playfairMatrix[rowA][colA]).append(playfairMatrix[rowB][colB]);
+        }
+
+        return result.toString();
+    }
+
     public static String caesar(String text, int shift) {
         StringBuilder cipherText = new StringBuilder();
         for (char c : text.toCharArray()) {
@@ -127,7 +193,6 @@ public class Main {
         }
         return new String(plainText);
     }
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -144,6 +209,7 @@ public class Main {
             System.out.println("3. Vigenere Auto-key");
             System.out.println("4. Thay thế đơn");
             System.out.println("5. Rail Fence");
+            System.out.println("6. Playfair");
             System.out.print("Nhập lựa chọn: ");
             int method = scanner.nextInt();
             System.out.print("Nhập văn bản: ");
@@ -178,6 +244,11 @@ public class Main {
                         System.out.print("Nhập số hàng (số nguyên): ");
                         int railKey = scanner.nextInt();
                         result = isEncrypt ? railFenceCipher(text, railKey) : railFenceDecrypt(text, railKey);
+                        break;
+                    case 6:
+                        System.out.print("Nhập khóa (chuỗi): ");
+                        String playfairKey = scanner.next().toUpperCase();
+                        result = isEncrypt ? playfairCipher(text, playfairKey, true) : playfairCipher(text, playfairKey, false);
                         break;
                     default:
                         System.out.println("Chế độ không hợp lệ!");

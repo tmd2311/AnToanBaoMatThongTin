@@ -177,7 +177,7 @@ class NumberTheory {
                     System.out.println("Nghịch đảo của " + invA + " mod " + invM + " là: " + modInverse(invA, invM));
                     break;
                 case 6:
-                    System.out.print("Nhập a, b, m (tìm x sao cho a^x ≡ b (mod m)): ");
+                    System.out.print("Nhập a, b, m (tìm x sao cho a^x ≡ b (mod m) hay tính x= (log a) b mod m ): ");
                     int da = scanner.nextInt();
                     int db = scanner.nextInt();
                     int dm = scanner.nextInt();
